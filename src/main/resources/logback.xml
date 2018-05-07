@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- enable basic JMX -->
+    <jmxConfigurator />
+
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%date{ISO8601}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(--){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}} |TAGS| %mdc |MARKER| %marker%n"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <property name="FILE_LOG_PATTERN" value="%date{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} -- [%t] %-40.40logger{39} : %m${LOG_EXCEPTION_CONVERSION_WORD:-%wEx} "/>
+
+    <appender name="APP_FOR_STREAM_STDOUT" class="ch.qos.logback.classic.AsyncAppender" queueSize="500">
+        <appender-ref ref="CONSOLE"/>
+    </appender>
+
+    <!-- FILE -->
+    <appender name="APP_FOR_STREAM_FILE_BLOCKING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/liveperson/data/server_appforstream/logs/app-for-stream.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Replace file every day -->
+            <fileNamePattern>/liveperson/data/server_appforstream/logs/app-for-stream.log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 50MB -->
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 10 days' worth of history -->
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="APP_FOR_STREAM_FILE" class="ch.qos.logback.classic.AsyncAppender" queueSize="500">
+        <appender-ref ref="APP_FOR_STREAM_FILE_BLOCKING"/>
+    </appender>
+
+
+    <!-- Setting the root level of logging to INFO -->
+    <root level="info">
+        <appender-ref ref="APP_FOR_STREAM_STDOUT" />
+        <appender-ref ref="APP_FOR_STREAM_FILE" />
+    </root>
+</configuration>
