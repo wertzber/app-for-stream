@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: appforstream-deploy
+spec:
+  replicas: 2
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: appforstream
+    spec:
+      containers:
+      - name: appfortream-pod
+        image: localhost:5000/appforstream:1.0.3
+        ports:
+        - containerPort: 8081

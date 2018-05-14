@@ -14,4 +14,6 @@ COPY src/main/resources/logback.xml /tmp/logback.xml
 #Copy Jar
 COPY target/appforstream.jar /tmp/appforstream.jar
 
+RUN echo 'deploy....' > /tmp/foo.txt
+
 ENTRYPOINT java -Dspring.config.location=/tmp/application.yml  -Dlogging.config=/tmp/logback.xml -jar /tmp/appforstream.jar
